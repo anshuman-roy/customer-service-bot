@@ -1,0 +1,9 @@
+langgraph==0.2.53
+langchain==0.3.9
+langchain-openai==0.2.10
+python-dotenv==1.0.1
+PyMySQL==1.1.1
+streamlit==1.40.2
+langchain-pinecone==0.2.0
+langchain-community==0.3.12
+pypdf==5.1.0
