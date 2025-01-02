@@ -140,6 +140,19 @@ class DatabaseManager():
 
         return rows
 
+    def execute_query(self, query: str, params: list):
+
+        try:
+            connections = self.get_db_connection()
+            cursor = connections.cursor()
+            cursor.execute(query, params)
+            connections.commit()
+
+        finally:
+            cursor.close()
+            connections.close()
+
+
 
 
 if __name__ == "__main__":

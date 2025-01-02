@@ -1,6 +1,7 @@
 from langchain_core.messages import ToolMessage
 from langchain_core.runnables import RunnableLambda
 from langgraph.prebuilt import ToolNode
+from datetime import datetime
 
 
 def handle_tool_error(state) -> dict:
@@ -37,3 +38,24 @@ def print_event(event: dict, _printed: set, max_length=1500):
                 msg_repr = msg_repr[:max_length] + " ... (truncated)"
             print(msg_repr)
             _printed.add(message.id)
+
+
+def convert_to_yyyy_mm_dd(date_str):
+    """Converts a date string in any format to 'YYYY-MM-DD' format."""
+
+    # Try parsing the date with common formats
+    common_formats = ["%Y-%m-%d", "%m/%d/%Y", "%d-%m-%Y", "%d/%m/%Y", "%b %d, %Y"]
+    for fmt in common_formats:
+        try:
+            date_obj = datetime.strptime(date_str, fmt)
+            return date_obj.strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+
+    # If common formats fail, try parsing with dateutil
+    try:
+        from dateutil import parser
+        date_obj = parser.parse(date_str)
+        return date_obj.strftime("%Y-%m-%d")
+    except ValueError:
+        raise ValueError(f"Could not parse date string: {date_str}")

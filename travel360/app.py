@@ -1,6 +1,7 @@
 import uuid
 from src.graph import Workflow
 from utils.utilities import print_event
+from ui.run_app import run_app
 
 
 thread_id = str(uuid.uuid4())
@@ -21,14 +22,16 @@ if __name__ == "__main__":
     _printed = set()
     workflow = Workflow()
 
-    while True:
-        user_input = input("User: ")
-        if user_input.lower() in ["quit", "exit", "q"]:
-            print("Goodbye!")
-            break
+    # while True:
+    #     user_input = input("User: ")
+    #     if user_input.lower() in ["quit", "exit", "q"]:
+    #         print("Goodbye!")
+    #         break
+    #
+    #     events = workflow.graph.stream(
+    #         {"messages": ("user", user_input)}, config, stream_mode="values"
+    #     )
+    #     for e in events:
+    #         print_event(e, _printed)
 
-        events = workflow.graph.stream(
-            {"messages": ("user", user_input)}, config, stream_mode="values"
-        )
-        for e in events:
-            print_event(e, _printed)
+    run_app(config, workflow)

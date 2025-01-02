@@ -5,11 +5,15 @@ from langchain_core.runnables import Runnable, RunnableConfig
 from llm.llm_manager import get_llm_model
 from langchain_core.prompts import ChatPromptTemplate
 from datetime import datetime
-from src.tools import fetch_user_flight_information, lookup_policy
+from src.tools import (fetch_user_flight_information, lookup_policy, search_flights, update_flight_to_new_flight,
+                       cancel_flight_ticket
+                       )
+
 
 
 class State(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
+    user_info: str
 
 
 class Assistant:
@@ -20,9 +24,9 @@ class Assistant:
     def __call__(self, state: State, config: RunnableConfig):
 
         while True:
-            configuration = config.get("configurable", {})
-            passenger_id = configuration.get("passenger_id", None)
-            state = {**state, "user_info": passenger_id}
+            # configuration = config.get("configurable", {})
+            # passenger_id = configuration.get("passenger_id", None)
+            # state = {**state, "user_info": passenger_id}
             result = self.runnable.invoke(state)
             # If the LLM happens to return an empty response, we will re-prompt it
             # for an actual response.
@@ -56,6 +60,7 @@ primary_assistant_prompt = ChatPromptTemplate.from_messages(
     ]
 ).partial(time=datetime.now)
 
-tools_list = [lookup_policy, fetch_user_flight_information]
+tools_list = [lookup_policy, fetch_user_flight_information, search_flights,
+              update_flight_to_new_flight, cancel_flight_ticket]
 
 assistant_runnable = primary_assistant_prompt | llm.bind_tools(tools_list)
